@@ -1,5 +1,6 @@
 import numpy as np
 from time import sleep
+import logging.config
 from sense_hat import SenseHat
 from reflection_curve import *
 from illuminant_data import IlluminantData
@@ -9,17 +10,18 @@ from number_matrix import *
 class AdvancedRainbow:
     def __init__(self):
         self.d65 = IlluminantData()
+        off = [0, 0, 0]
         self.matrix = np.array([
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
-            [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
+            [off, off, off, off, off, off, off, off],
+            [off, off, off, off, off, off, off, off],
+            [off, off, off, off, off, off, off, off],
+            [off, off, off, off, off, off, off, off],
+            [off, off, off, off, off, off, off, off],
+            [off, off, off, off, off, off, off, off],
+            [off, off, off, off, off, off, off, off],
+            [off, off, off, off, off, off, off, off],
         ])
-
+           
     def run(self):
         sense = SenseHat()
 
@@ -27,7 +29,7 @@ class AdvancedRainbow:
         i = 0
         started = False
 
-        print("generating all colors of the rainbow. Press Ctrl-C to exit")
+        logging.info("generating all colors of the rainbow. Press Ctrl-C to exit")
         try:
             while True:
                 index = i
@@ -39,7 +41,7 @@ class AdvancedRainbow:
 
                 for j in range(8):
                     # increasing the band width in every row
-                    curve = create_curve(d65.count, i, j * 3)
+                    curve = create_curve(self.d65.count, i, j * 3)
                     xyz = ReflectionCurve(curve).get_xyz()
                     rgb = xyz.get_rgb()
                     self.matrix[index, j, 0] = rgb.r_norm
