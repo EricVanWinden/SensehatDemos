@@ -1,5 +1,5 @@
-from Lab import *
-from Rgb import *
+from lab import *
+from rgb import *
 
 
 class Xyz:

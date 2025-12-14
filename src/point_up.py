@@ -1,5 +1,5 @@
 from sense_hat import SenseHat
-from NumberMatrix import *
+from number_matrix import *
 
 sense = SenseHat()
 off = [0, 0, 0]

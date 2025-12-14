@@ -1,5 +1,5 @@
-from Xyz import *
-from IlluminantData import *
+from xyz import *
+from illuminant_data import *
 
 
 class ReflectionCurve:

@@ -1,5 +1,5 @@
 from sense_hat import SenseHat
-from NumberMatrix import *
+from number_matrix import *
 from time import sleep
 
 sense = SenseHat()
