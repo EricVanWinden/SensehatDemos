@@ -1,6 +1,6 @@
 import numpy as np
 from time import sleep
-from sense_hat import SenseHat as sense
+from sense_hat import SenseHat
 from reflection_curve import *
 from illuminant_data import IlluminantData
 from curve_creator import *
@@ -21,6 +21,8 @@ class AdvancedRainbow:
         ])
 
     def run(self):
+        sense = SenseHat()
+
         # looping over wavelengths
         i = 0
         started = False
