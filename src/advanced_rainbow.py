@@ -1,4 +1,3 @@
-from xyz import *
 import numpy as np
 from time import sleep
 from sense_hat import SenseHat
