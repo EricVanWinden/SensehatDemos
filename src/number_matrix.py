@@ -242,7 +242,7 @@ class NumberMatrix:
             same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value]
 
     def all_same_3d(self, same_value):
-        return [
+        return np.array([
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
@@ -250,4 +250,4 @@ class NumberMatrix:
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
-            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value]]
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value]])
