@@ -243,12 +243,13 @@ class NumberMatrix:
 
     def make_gradient_3d(self):
         values = []
-        counter = 0
+        g = 0
         for i in range(8):
             values_i = []
+            r = int(i * 32)
             for j in range(8):
-                rgb = int(counter * 4)
-                values_i.append([rgb, rgb, rgb])
+                b =int(j * 32)
+                values_i.append([r, g, b])
                 counter += 1
             values.append(values_i)
         return np.array(values)
