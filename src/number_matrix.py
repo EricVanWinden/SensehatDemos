@@ -6,6 +6,9 @@ class NumberMatrix:
     def __init__(self):
         self.off = [0, 0, 0]
         self.on = [255, 255, 255]
+        self.red = [255, 0, 0]
+        self.green = [0, 255, 0]
+        self.blue = [0, 0, 255]
         self.direction = 0
 
     def create_matrix(self, number):

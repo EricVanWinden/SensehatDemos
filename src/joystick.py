@@ -1,79 +1,62 @@
+import logging.config
 from sense_hat import SenseHat
+from number_matrix import NumberMatrix
+
 
 class Joystick:
     def __init__(self):
-        off = [0, 0, 0]
-        self.pixels_off = [
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off]
+        self.sense = SenseHat()
+        self.nm = NumberMatrix()
 
     def run(self):
-        # initialize
-        sense = SenseHat()
-        color = [255, 255, 255]
+        matrix = self.nm.all_same_3d(self.nm.off)
+        busy = True
         x = 4
         y = 4
-        sense.set_pixels(self.pixels_off)
-        sense.set_pixel(x, y, color)
-        busy = True
-
-        print("Use joystick to move the dot. Hold middle to stop")
+        logging.info("Use joystick to move the dot. Hold middle to stop")
         while busy:
-            for event in sense.stick.get_events():
+            for event in self.sense.stick.get_events():
                 if (event.direction == 'middle') & (event.action == 'held'):
                     busy = False
 
                 if (event.action == 'pressed') | (event.action == 'held'):
                     if event.direction == 'up':
                         if y > 0:
+                            matrix[x, y] = self.nm.off
                             y -= 1
-                            color = [0, 255, 0]
+                            matrix[x, y] = self.nm.green
                         else:
-                            color = [255, 0, 0]
+                            matrix[x, y] = self.nm.red
 
                     if event.direction == 'down':
                         if y < 7:
+                            matrix[x, y] = self.nm.off
                             y += 1
-                            color = [0, 255, 0]
+                            matrix[x, y] = self.nm.green
                         else:
-                            color = [255, 0, 0]
+                            matrix[x, y] = self.nm.red
 
                     if event.direction == 'left':
                         if x > 0:
+                            matrix[x, y] = self.nm.off
                             x -= 1
-                            color = [0, 255, 0]
+                            matrix[x, y] = self.nm.green
                         else:
-                            color = [255, 0, 0]
+                            matrix[x, y] = self.nm.red
 
                     if event.direction == 'right':
                         if x < 7:
+                            matrix[x, y] = self.nm.off
                             x += 1
-                            color = [0, 255, 0]
+                            matrix[x, y] = self.nm.green
                         else:
-                            color = [255, 0, 0]
+                            matrix[x, y] = self.nm.red
 
                 if event.action == 'released':
-                    color = [255, 255, 255]
+                    matrix[x, y] = self.nm.on
 
-                print(str(event.action) + " " + str(event.direction) + " " + str(x) + " " + str(y))
-                sense.set_pixels(self.pixels_off)
-                sense.set_pixel(x, y, color)
+                pixels = self.nm.create_pixels(matrix)
+                self.sense.set_pixels(pixels)
 
-        off = [0, 0, 0]
-        pixels_off = [
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off,
-            off, off, off, off, off, off, off, off]
-        sense.set_pixels(pixels_off)
-        print("Joystick demo stopped")
+        self.sense.set_pixels(self.nm.all_same_2d(self.nm.off))
+        logging.info("Joystick demo stopped")
