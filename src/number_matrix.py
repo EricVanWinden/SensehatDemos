@@ -250,6 +250,5 @@ class NumberMatrix:
             for j in range(8):
                 b =int(j * 32)
                 values_i.append([r, g, b])
-                counter += 1
             values.append(values_i)
         return np.array(values)
