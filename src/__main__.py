@@ -14,7 +14,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run SenseHat demo(s)")
     parser.add_argument(
         "--demo",
-        choices=["0", "1", "2", "3", "4", "5"],
+        choices=["0", "1", "2", "3", "4", "5", "6"],
         default="0",
         help="Which demo to run (default: 0)",
     )
