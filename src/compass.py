@@ -10,7 +10,7 @@ class Compass:
 
     def run(self):
         logging.info("Compass, dot is pointing north. Press Ctrl-C to exit")
-        self.sense.set_pixels(self.nm.all_same(self.nm.off))
+        self.sense.set_pixels(self.nm.all_same_2d(self.nm.off))
         try:
             while True:
                 north = self.sense.get_compass()
@@ -21,7 +21,7 @@ class Compass:
                 for j in range(coordinate.__len__()):
                     self.sense.set_pixel(coordinate[j][0], coordinate[j][1], self.nm.off)
         except KeyboardInterrupt:
-            self.sense.set_pixels(self.nm.all_same(self.nm.off))
+            self.sense.set_pixels(self.nm.all_same_2d(self.nm.off))
             logging.info("Compass stopped")
 
 def calculate_coordinate(degrees):

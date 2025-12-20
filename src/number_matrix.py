@@ -230,7 +230,18 @@ class NumberMatrix:
             matrix[7, 7],
         ]
 
-    def all_same(self, same_value):
+    def all_same_2d(self, same_value):
+        return [
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
+            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value]
+
+    def all_same_3d(self, same_value):
         return [
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],

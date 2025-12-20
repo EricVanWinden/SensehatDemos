@@ -5,7 +5,6 @@ from reflection_curve import *
 from illuminant_data import IlluminantData
 from curve_creator import *
 from number_matrix import *
-import numpy as np
 
 
 class AdvancedRainbow:
@@ -15,7 +14,7 @@ class AdvancedRainbow:
         self.nm = NumberMatrix()
 
     def run(self):
-        matrix = np.array(self.nm.all_same(self.nm.off))
+        matrix = self.nm.all_same_3d(self.nm.off)
 
         # looping over wavelengths
         i = 0
@@ -49,5 +48,5 @@ class AdvancedRainbow:
                     i = 0
 
         except KeyboardInterrupt:
-            self.sense.set_pixels(self.nm.all_same(self.nm.off))
+            self.sense.set_pixels(self.nm.all_same_2d(self.nm.off))
             logging.info("Advanced rainbow demo stopped")
