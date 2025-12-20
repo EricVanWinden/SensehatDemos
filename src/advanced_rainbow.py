@@ -1,4 +1,3 @@
-import numpy as np
 from time import sleep
 import logging.config
 from sense_hat import SenseHat
@@ -7,23 +6,15 @@ from illuminant_data import IlluminantData
 from curve_creator import *
 from number_matrix import *
 
+
 class AdvancedRainbow:
     def __init__(self):
         self.d65 = IlluminantData()
-        off = [0, 0, 0]
-        self.matrix = np.array([
-            [off, off, off, off, off, off, off, off],
-            [off, off, off, off, off, off, off, off],
-            [off, off, off, off, off, off, off, off],
-            [off, off, off, off, off, off, off, off],
-            [off, off, off, off, off, off, off, off],
-            [off, off, off, off, off, off, off, off],
-            [off, off, off, off, off, off, off, off],
-            [off, off, off, off, off, off, off, off],
-        ])
-           
+        self.sense = SenseHat()
+        self.nm = NumberMatrix()
+
     def run(self):
-        sense = SenseHat()
+        matrix = self.nm.all_same(self.nm.off)
 
         # looping over wavelengths
         i = 0
@@ -37,20 +28,19 @@ class AdvancedRainbow:
                     started = True
                     index = 7
                     for j in range(7):
-                        self.matrix[j] = self.matrix[j + 1]
+                        matrix[j] = matrix[j + 1]
 
                 for j in range(8):
                     # increasing the band width in every row
                     curve = create_curve(self.d65.count, i, j * 3)
                     xyz = ReflectionCurve(curve).get_xyz()
                     rgb = xyz.get_rgb()
-                    self.matrix[index, j, 0] = rgb.r_norm
-                    self.matrix[index, j, 1] = rgb.g_norm
-                    self.matrix[index, j, 2] = rgb.b_norm
+                    matrix[index, j, 0] = rgb.r_norm
+                    matrix[index, j, 1] = rgb.g_norm
+                    matrix[index, j, 2] = rgb.b_norm
 
-                print_matrix(self.matrix)
-                pixels = create_pixels(self.matrix)
-                sense.set_pixels(pixels)
+                pixels = self.nm.create_pixels(matrix)
+                self.sense.set_pixels(pixels)
 
                 sleep(0.1)
                 i += 1
@@ -58,15 +48,5 @@ class AdvancedRainbow:
                     i = 0
 
         except KeyboardInterrupt:
-            off = [0, 0, 0]
-            pixels_off = [
-                off, off, off, off, off, off, off, off,
-                off, off, off, off, off, off, off, off,
-                off, off, off, off, off, off, off, off,
-                off, off, off, off, off, off, off, off,
-                off, off, off, off, off, off, off, off,
-                off, off, off, off, off, off, off, off,
-                off, off, off, off, off, off, off, off,
-                off, off, off, off, off, off, off, off]
-            sense.set_pixels(pixels_off)
-            print("Advanced rainbow demo stopped")
+            self.sense.set_pixels(self.nm.all_same(self.nm.off))
+            logging.info("Advanced rainbow demo stopped")

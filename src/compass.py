@@ -1,6 +1,28 @@
+from time import sleep
+import logging.config
 from sense_hat import SenseHat
 from number_matrix import *
 
+class Compass:
+    def __init__(self):
+        self.sense = SenseHat()
+        self.nm = NumberMatrix()
+
+    def run(self):
+        logging.info("Compass, dot is pointing north. Press Ctrl-C to exit")
+        self.sense.set_pixels(self.nm.all_same(self.nm.off))
+        try:
+            while True:
+                north = self.sense.get_compass()
+                coordinate = calculate_coordinate(north)
+                for j in range(coordinate.__len__()):
+                    self.sense.set_pixel(coordinate[j][0], coordinate[j][1], self.nm.on)
+                sleep(0.1)
+                for j in range(coordinate.__len__()):
+                    self.sense.set_pixel(coordinate[j][0], coordinate[j][1], self.nm.off)
+        except KeyboardInterrupt:
+            self.sense.set_pixels(self.nm.all_same(self.nm.off))
+            logging.info("Compass stopped")
 
 def calculate_coordinate(degrees):
     x = int(math.cos(degrees * math.pi / 180) * 4.0) + 4
@@ -21,31 +43,3 @@ def calculate_coordinate(degrees):
         x -= 1
 
     return [[x, y]]
-
-
-sense = SenseHat()
-on = [255, 255, 255]
-off = [0, 0, 0]
-pixels_off = [
-    off, off, off, off, off, off, off, off,
-    off, off, off, off, off, off, off, off,
-    off, off, off, off, off, off, off, off,
-    off, off, off, off, off, off, off, off,
-    off, off, off, off, off, off, off, off,
-    off, off, off, off, off, off, off, off,
-    off, off, off, off, off, off, off, off,
-    off, off, off, off, off, off, off, off]
-
-print("Compass, dot is pointing north. Press Ctrl-C to exit")
-try:
-    while True:
-        sense = SenseHat()
-        north = sense.get_compass()
-        coordinate = calculate_coordinate(north)
-        sense.set_pixels(pixels_off)
-        for j in range(coordinate.__len__()):
-            sense.set_pixel(coordinate[j][0], coordinate[j][1], on)
-
-except KeyboardInterrupt:
-    sense.set_pixels(pixels_off)
-    print("Compass stopped")
