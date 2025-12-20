@@ -232,11 +232,11 @@ class NumberMatrix:
 
     def all_same(self, same_value):
         return [
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value,
-            same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value]
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
+            [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value]]
