@@ -12,8 +12,6 @@ class NumberMatrix:
         Generates an 8 * 8 matrix that can be displayed self.on the sense hat
         :param number: the number to display
         """
-        self.on = [255, 255, 255]
-        self.off = [0, 0, 0]
         matrix = self.all_same_3d(self.off)
 
         if number < 0:
@@ -242,3 +240,15 @@ class NumberMatrix:
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value],
             [same_value, same_value, same_value, same_value, same_value, same_value, same_value, same_value]])
+
+    def make_gradient_3d(self):
+        values = []
+        counter = 0
+        for i in range(8):
+            values_i = []
+            for j in range(8):
+                rgb = int(counter * 4)
+                values_i.append([rgb, rgb, rgb])
+                counter += 1
+            values.append(values_i)
+        return np.array(values)
