@@ -6,7 +6,7 @@ class NumberMatrix:
     def __init__(self):
         self.off = [0, 0, 0]
         self.on = [255, 255, 255]
-        self.direction = 'V'
+        self.direction = 0
 
     def create_matrix(self, number):
         """
@@ -202,13 +202,31 @@ class NumberMatrix:
 
     def create_pixels(self, matrix):
         values = []
-        for i in range(8):
-            for j in range(8):
-                if self.direction == 'H':
+        if self.direction == 90:
+            for i in range(8):
+                for j in range(8):
+                    values.append(matrix[i, 7 - j])
+
+            return values
+        elif self.direction == 180:
+            for i in range(8):
+                for j in range(8):
+                    values.append(matrix[7 - j, 7 - i])
+
+            return values
+        elif self.direction == 270:
+            for i in range(8):
+                for j in range(8):
+                    values.append(matrix[7 - i, j])
+
+            return values
+        else:
+            # default is 0
+            for i in range(8):
+                for j in range(8):
                     values.append(matrix[j, i])
-                else:
-                    values.append(matrix[i, j])
-        return values
+
+            return values
 
     def all_same_2d(self, same_value):
         return [
