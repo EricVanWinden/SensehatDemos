@@ -4,7 +4,7 @@ from sense_hat import SenseHat
 from reflection_curve import *
 from illuminant_data import IlluminantData
 from curve_creator import *
-from number_matrix import *
+from number_matrix import NumberMatrix
 
 
 class AdvancedRainbow:

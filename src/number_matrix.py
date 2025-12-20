@@ -14,16 +14,7 @@ class NumberMatrix:
         """
         self.on = [255, 255, 255]
         self.off = [0, 0, 0]
-        matrix = np.array([
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-            [self.off, self.off, self.off, self.off, self.off, self.off, self.off, self.off],
-        ])
+        matrix = self.all_same_3d(self.off)
 
         if number < 0:
             return matrix

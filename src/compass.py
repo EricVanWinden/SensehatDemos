@@ -1,7 +1,7 @@
 from time import sleep
 import logging.config
 from sense_hat import SenseHat
-from number_matrix import *
+from number_matrix import NumberMatrix
 
 class Compass:
     def __init__(self):
