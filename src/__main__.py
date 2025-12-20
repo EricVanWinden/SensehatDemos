@@ -3,7 +3,7 @@ import logging.config
 from advanced_rainbow import AdvancedRainbow
 from compass import Compass
 from count_down import CountDown
-from sandbox import SandBox
+from red_blue_gradient import RedBlueGradient
 
 
 def main() -> None:
@@ -26,7 +26,7 @@ def main() -> None:
     elif args.demo == "2":
         demo = CountDown()
     elif args.demo == "3":
-        demo = SandBox()
+        demo = RedBlueGradient()
     else:
         logging.error(f"Invalid demo choice: {args.demo}")
         return
