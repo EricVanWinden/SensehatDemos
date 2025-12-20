@@ -9,11 +9,15 @@ class Joystick:
         self.nm = NumberMatrix()
 
     def run(self):
+        logging.info("Use joystick to move the dot. Hold middle to stop")
         matrix = self.nm.all_same_3d(self.nm.off)
-        busy = True
         x = 4
         y = 4
-        logging.info("Use joystick to move the dot. Hold middle to stop")
+        matrix[x, y] = self.nm.on
+        pixels = self.nm.create_pixels(matrix)
+        self.sense.set_pixels(pixels)
+
+        busy = True
         while busy:
             for event in self.sense.stick.get_events():
                 if (event.direction == 'middle') & (event.action == 'held'):

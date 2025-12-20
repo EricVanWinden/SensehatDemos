@@ -264,3 +264,15 @@ class NumberMatrix:
                 values_i.append([r, g, b])
             values.append(values_i)
         return np.array(values)
+
+    def make_arrow(self, color):
+        return np.array([
+            [self.off, self.off, self.off, color, color, self.off, self.off, self.off],
+            [self.off, self.off, color, color, color, color, self.off, self.off],
+            [self.off, color, color, color, color, color, color, self.off],
+            [color, color, color, color, color, color, color, color],
+            [self.off, self.off, self.off, color, color, self.off, self.off, self.off],
+            [self.off, self.off, self.off, color, color, self.off, self.off, self.off],
+            [self.off, self.off, self.off, color, color, self.off, self.off, self.off],
+            [self.off, self.off, self.off, color, color, self.off, self.off, self.off],
+        ])

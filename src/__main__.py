@@ -6,13 +6,14 @@ from count_down import CountDown
 from red_blue_gradient import RedBlueGradient
 from number_matrix import NumberMatrix
 from joystick import Joystick
+from point_up import Accelerometer
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run SenseHat demo(s)")
     parser.add_argument(
         "--demo",
-        choices=["0", "1", "2", "3", "4"],
+        choices=["0", "1", "2", "3", "4", "5"],
         default="0",
         help="Which demo to run (default: 0)",
     )
@@ -40,6 +41,8 @@ def main() -> None:
         demo = RedBlueGradient()
     elif args.demo == "4":
         demo = Joystick()
+    elif args.demo == "5":
+        demo = Accelerometer()
     else:
         logging.error(f"Invalid demo choice: {args.demo}")
         return
