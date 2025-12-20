@@ -5,6 +5,7 @@ from reflection_curve import *
 from illuminant_data import IlluminantData
 from curve_creator import *
 from number_matrix import *
+import numpy as np
 
 
 class AdvancedRainbow:
@@ -14,7 +15,7 @@ class AdvancedRainbow:
         self.nm = NumberMatrix()
 
     def run(self):
-        matrix = self.nm.all_same(self.nm.off)
+        matrix = np.array(self.nm.all_same(self.nm.off))
 
         # looping over wavelengths
         i = 0
