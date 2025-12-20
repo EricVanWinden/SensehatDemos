@@ -9,7 +9,7 @@ class NumberMatrix:
         self.red = [255, 0, 0]
         self.green = [0, 255, 0]
         self.blue = [0, 0, 255]
-        self.direction = 0
+        self.direction = 0 # Redundant, can also be done with sense.set_rotation()
 
     def create_matrix(self, number):
         """

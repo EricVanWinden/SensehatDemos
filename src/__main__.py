@@ -30,8 +30,6 @@ def main() -> None:
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(module)s - %(funcName)s - %(levelname)s - %(message)s')
 
-    nm = NumberMatrix()
-    nm.direction = int(args.direction)
     if args.demo == "0":
         demo = AdvancedRainbow()
     elif args.demo == "1":
@@ -49,7 +47,9 @@ def main() -> None:
     else:
         logging.error(f"Invalid demo choice: {args.demo}")
         return
-    demo.nm = nm
+
+    direction = int(args.direction)
+    demo.sense.set_rotation(direction)
     demo.run()
 
 
