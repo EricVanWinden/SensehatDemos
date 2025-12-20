@@ -7,6 +7,7 @@ from red_blue_gradient import RedBlueGradient
 from number_matrix import NumberMatrix
 from joystick import Joystick
 from point_up import Accelerometer
+from weather import Weather
 
 
 def main() -> None:
@@ -43,6 +44,8 @@ def main() -> None:
         demo = Joystick()
     elif args.demo == "5":
         demo = Accelerometer()
+    elif args.demo == "6":
+        demo = Weather()
     else:
         logging.error(f"Invalid demo choice: {args.demo}")
         return
