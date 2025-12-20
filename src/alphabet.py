@@ -16,6 +16,10 @@ class Alphabet:
             for c in string.ascii_uppercase:
                 self.sense.show_letter(c)
                 sleep(0.5)
+
+            self.sense.set_pixels(self.nm.all_same_2d(self.nm.off))
+            logging.info("Alphabet stopped")
+
         except KeyboardInterrupt:
             self.sense.set_pixels(self.nm.all_same_2d(self.nm.off))
             logging.info("Alphabet stopped")
