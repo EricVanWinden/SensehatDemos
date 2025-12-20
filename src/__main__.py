@@ -8,13 +8,13 @@ from number_matrix import NumberMatrix
 from joystick import Joystick
 from point_up import Accelerometer
 from weather import Weather
-
+from alphabet import Alphabet
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run SenseHat demo(s)")
     parser.add_argument(
         "--demo",
-        choices=["0", "1", "2", "3", "4", "5", "6"],
+        choices=["0", "1", "2", "3", "4", "5", "6", "7"],
         default="0",
         help="Which demo to run (default: 0)",
     )
@@ -44,6 +44,8 @@ def main() -> None:
         demo = Accelerometer()
     elif args.demo == "6":
         demo = Weather()
+    elif args.demo == "7":
+        demo = Alphabet()
     else:
         logging.error(f"Invalid demo choice: {args.demo}")
         return

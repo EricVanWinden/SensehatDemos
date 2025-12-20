@@ -1,3 +1,4 @@
+import math
 from time import sleep
 import logging.config
 from sense_hat import SenseHat
