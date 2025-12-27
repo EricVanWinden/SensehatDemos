@@ -1,8 +1,9 @@
 [Unit]
 Description=Sense HAT Sensor Logger
-After=network.target multi-user.target
+After=multi-user.target
 
 [Service]
+Type=simple
 WorkingDirectory=/home/pi/SensehatDemos
 ExecStart=/home/pi/SensehatDemos/.venv/bin/python /home/pi/SensehatDemos/logger.py
 User=pi

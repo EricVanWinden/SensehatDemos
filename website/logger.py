@@ -5,7 +5,7 @@ import datetime
 from sense_hat import SenseHat
 
 sense = SenseHat()
-LOGFILE = "sensor_log.txt"
+LOGFILE = "/home/pi/SensehatDemos/sensor_log.txt"
 delay = 60
 
 logging.basicConfig(
@@ -21,6 +21,7 @@ def log_readings():
 
     while True:
         try:
+            time.sleep(delay)
             acc = sense.get_accelerometer_raw()
             row = (
                 f"{datetime.datetime.now().isoformat()}\t"
@@ -36,8 +37,7 @@ def log_readings():
         except Exception as e:
             logging.error(e)
 
-        time.sleep(delay)
-
 
 if __name__ == "__main__":
     logging.info("Starting logger")
+    log_readings()
