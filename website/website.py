@@ -1,5 +1,6 @@
 import logging
 import requests
+from collections import deque
 from flasgger import Swagger
 from flask import Flask, Response, request, render_template, send_from_directory
 from sense_hat import SenseHat
@@ -57,6 +58,20 @@ def home():
     return render_template("home.html")
 
 
+@app.route("/graph")
+def graph():
+    """
+    Sensehat graph page.
+    ---
+    tags:
+      - SenseHat
+    responses:
+      200:
+        description: HTML graph
+    """
+    return render_template("graph.html")
+
+
 @app.route("/download_log")
 def download_log():
     """
@@ -81,6 +96,42 @@ def download_log():
         LOGFILE,
         as_attachment=True
     )
+
+
+@app.route("/sensor_data")
+def sensor_data():
+    """
+    Return logged sensor data as JSON.
+    ---
+    get:
+      description: Returns parsed sensor_log.txt as JSON for graphing.
+      responses:
+        200:
+          description: JSON array of sensor readings.
+    """
+    max_lines = 60 * 24  # last 24 hours
+
+    with open(f"{LOG_DIR}/{LOGFILE}") as f:
+        lines = deque(f, max_lines + 1)
+
+    data = []
+    for line in list(lines)[1:]:
+        parts = line.strip().split("\t")
+        data.append({
+            "timestamp": parts[0],
+            "north": float(parts[1]),
+            "x": float(parts[2]),
+            "y": float(parts[3]),
+            "z": float(parts[4]),
+            "temperature": float(parts[5]),
+            "humidity": float(parts[6]),
+            "pressure": float(parts[7])
+        })
+
+    return data
+
+
+from collections import deque
 
 
 @app.route('/all_sensors')
