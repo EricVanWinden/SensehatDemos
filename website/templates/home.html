@@ -48,10 +48,18 @@
 		<button onclick="window.location.href='/apidocs'">API documentation</button>
 	</div>
 
-	<h2>Text display</h2>
-	<form method="POST">
-		<input type="text" name="text_to_display" placeholder="Text to display">
-		<button type="submit" formaction="/display_text">Display text</button>
-	</form>
+<h2>Text display</h2>
+<form method="POST">
+    <input type="text" name="text_to_display" placeholder="Text to display">
+    <input type="number"
+           name="repeats"
+           value="5"
+           min="1"
+           max="50"
+           step="1"
+           placeholder="Repeats">
+    <button type="submit" formaction="/display_text">Display text</button>
+</form>
+
 </body>
 </html>

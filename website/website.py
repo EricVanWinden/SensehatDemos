@@ -17,8 +17,8 @@ logging.basicConfig(
 app = Flask(__name__)
 swagger = Swagger(app)
 
-rotation = 0
 sense = SenseHat()
+rotation = 0
 sense.set_rotation(rotation)
 
 
@@ -128,7 +128,7 @@ def rotate_matrix():
     if rotation == 360:
         rotation = 0
     sense.set_rotation(rotation)
-    return rotation
+    return {"rotation": rotation}
 
 
 @app.route('/use_joystick')
@@ -222,11 +222,13 @@ def display_text():
         description: Processing error
     """
     text_to_display = request.form.get("text_to_display", "").strip()
+    repeats = int(request.form.get('repeats',"5"))
     if not text_to_display:
         return "Text required", 400
 
-    sense.show_message(text_to_display)
-    return f"displaying {text_to_display}"
+    for i in range(repeats):
+        sense.show_message(text_to_display)
+    return f"Displayed {text_to_display}"
 
 
 @app.route('/health')
