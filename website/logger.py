@@ -5,7 +5,7 @@ import datetime
 from sense_hat import SenseHat
 
 sense = SenseHat()
-LOGFILE = "/home/pi/SensehatDemos/sensor_log.txt"
+LOGFILE = "/home/pi/SensehatDemos/website/sensor_log.txt"
 delay = 60
 
 logging.basicConfig(
