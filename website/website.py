@@ -7,6 +7,7 @@ import numpy as np
 from flask import Flask, Response, request, render_template, send_from_directory
 from waitress import serve
 from sense_hat import SenseHat
+from number_matrix import NumberMatrix
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -16,7 +17,9 @@ logging.basicConfig(
 app = Flask(__name__)
 swagger = Swagger(app)
 
+rotation = 0
 sense = SenseHat()
+sense.set_rotation(rotation)
 
 
 @app.route("/")
@@ -93,18 +96,137 @@ def all_sensors():
         <h1>All Sensors</h1>
         <table>
           <tr><th>Output</th><th>Value</th></tr>
-          <tr><td>Compass (north)</td><td>{north:.2f}</td></tr>
+          <tr><td>Compass (north)</td><td>{north:.0f}</td></tr>
           <tr><td>Accel X</td><td>{x:.4f}</td></tr>
           <tr><td>Accel Y</td><td>{y:.4f}</td></tr>
           <tr><td>Accel Z</td><td>{z:.4f}</td></tr>
-          <tr><td>Temperature (°C)</td><td>{t:.2f}</td></tr>
-          <tr><td>Humidity (%)</td><td>{rh:.2f}</td></tr>
-          <tr><td>Pressure (mbar)</td><td>{p:.2f}</td></tr>
+          <tr><td>Temperature (°C)</td><td>{t:.0f}</td></tr>
+          <tr><td>Humidity (%)</td><td>{rh:.0f}</td></tr>
+          <tr><td>Pressure (mbar)</td><td>{p:.0f}</td></tr>
         </table>
       </body>
     </html>
     """
     return html
+
+
+@app.route('/rotate_matrix')
+def rotate_matrix():
+    """
+    Rotates the SenseHat matrix by 90 degrees and returns the new value.
+    ---
+    tags:
+      - SenseHat
+    summary: rotates the SenseHat matrix
+    description: rotates the SenseHat matrix.
+    responses:
+      200:
+        description: the new rotation value
+    """
+    global rotation
+    rotation += 90
+    if rotation == 360:
+        rotation = 0
+    sense.set_rotation(rotation)
+    return rotation
+
+
+@app.route('/use_joystick')
+def use_joystick():
+    """
+    Use the joystick to move the dot on the LED screen
+    ---
+    tags:
+      - SenseHat
+    summary: rotates the SenseHat matrix
+    description: rotates the SenseHat matrix.
+    responses:
+      200:
+        description: the new rotation value
+    """
+    logging.info("Use joystick to move the dot. Hold middle to stop")
+    nm = NumberMatrix()
+    matrix = nm.all_same_3d(nm.off)
+    x = 4
+    y = 4
+    matrix[x, y] = nm.on
+    pixels = nm.create_pixels(matrix)
+    sense.set_pixels(pixels)
+
+    busy = True
+    while busy:
+        for event in sense.stick.get_events():
+            if (event.direction == 'middle') & (event.action == 'held'):
+                busy = False
+
+            if (event.action == 'pressed') | (event.action == 'held'):
+                if event.direction == 'up':
+                    if y > 0:
+                        matrix[x, y] = nm.off
+                        y -= 1
+                        matrix[x, y] = nm.green
+                    else:
+                        matrix[x, y] = nm.red
+
+                if event.direction == 'down':
+                    if y < 7:
+                        matrix[x, y] = nm.off
+                        y += 1
+                        matrix[x, y] = nm.green
+                    else:
+                        matrix[x, y] = nm.red
+
+                if event.direction == 'left':
+                    if x > 0:
+                        matrix[x, y] = nm.off
+                        x -= 1
+                        matrix[x, y] = nm.green
+                    else:
+                        matrix[x, y] = nm.red
+
+                if event.direction == 'right':
+                    if x < 7:
+                        matrix[x, y] = nm.off
+                        x += 1
+                        matrix[x, y] = nm.green
+                    else:
+                        matrix[x, y] = nm.red
+
+            if event.action == 'released':
+                matrix[x, y] = nm.on
+
+            pixels = nm.create_pixels(matrix)
+            sense.set_pixels(pixels)
+
+    sense.set_pixels(nm.all_same_2d(nm.off))
+    msg = "Joystick demo stopped"
+    logging.info(msg)
+    return msg
+
+
+@app.route("/display_text", methods=["POST"])
+def display_text():
+    """
+    Displays the text on the SenseHat matrix.
+    ---
+    tags:
+      -  SenseHat
+    requestBody:
+      required: true
+    responses:
+      200:
+        description: text is displayed
+      400:
+        description: Invalid or missing text
+      500:
+        description: Processing error
+    """
+    text_to_display = request.form.get("text_to_display", "").strip()
+    if not text_to_display:
+        return "Text required", 400
+
+    sense.show_message(text_to_display)
+    return f"displaying {text_to_display}"
 
 
 @app.route('/health')

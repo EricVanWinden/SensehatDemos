@@ -43,7 +43,15 @@
 	<h1>Sensehat Control Panel</h1>
 	<div class="button-grid">
 		<button onclick="window.location.href='/all_sensors'">Read all sensors</button>
+        <button onclick="window.location.href='/rotate_matrix'">Rotate the matrix</button>
+        <button onclick="window.location.href='/use_joystick'">Joystick</button>
 		<button onclick="window.location.href='/apidocs'">API documentation</button>
 	</div>
+
+	<h2>Text display</h2>
+	<form method="POST">
+		<input type="text" name="text_to_display" placeholder="Text to display">
+		<button type="submit" formaction="/display_text">Display text</button>
+	</form>
 </body>
 </html>
