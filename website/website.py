@@ -65,12 +65,16 @@ def graph():
     Sensehat graph page.
     ---
     tags:
-      - SenseHat
+      - Logger
     responses:
       200:
         description: HTML graph
     """
-    return render_template("graph.html")
+    try:
+        return render_template("graph.html")
+    except Exception as e:
+        logging.exception(f"Error rendering graph: {e}")
+        raise
 
 
 @app.route("/download_log")
@@ -80,7 +84,7 @@ def download_log():
 
     ---
     tags:
-      - SenseHat
+      - Logger
     get:
       description: Download the tab‑delimited Sense HAT sensor log.
       responses:
@@ -104,6 +108,8 @@ def sensor_data():
     """
     Return logged sensor data as JSON.
     ---
+    tags:
+      - Logger
     get:
       description: Returns parsed sensor_log.txt as JSON for graphing.
       responses:

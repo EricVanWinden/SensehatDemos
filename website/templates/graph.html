@@ -1,5 +1,5 @@
 <script>
-    fetch("/sensor-data")
+    fetch("/sensor_data")
         .then(response => response.json())
         .then(data => {
             const labels = data.map(row => row.time_hm);
