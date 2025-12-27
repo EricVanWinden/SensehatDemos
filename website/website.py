@@ -23,7 +23,7 @@ units = {
     "X": "-",
     "Y": "-",
     "Z": "-",
-    "Temperature ": "°C",
+    "Temperature": "°C",
     "Humidity": "%",
     "Pressure": "mbar"
 }
@@ -89,21 +89,32 @@ def all_sensors():
 
     html = """
     <html>
-      <head>
-        <title>All Sensors</title>
-        <style>
-          table {{
-            border-collapse: collapse;
-          }}
-          th, td {{
-            border: 1px solid #555;
-            padding: 4px 8px;
-          }}
-          th {{
-            background-color: #eee;
-          }}
-        </style>
-      </head>
+  <head>
+    <title>All Sensors</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: auto;
+      }
+      th {
+        background-color: #eee;
+        border-bottom: 2px solid #555;
+        padding: 4px 8px;
+        text-align: center;
+      }
+      td, th {
+        border-left: 1px solid #555;
+        border-right: 1px solid #555;
+        padding: 4px 8px;
+      }
+      td:first-child {
+        text-align: left;
+      }
+      td:not(:first-child) {
+        text-align: center;
+      }
+    </style>
+  </head>
       <body>
         <h1>All Sensors</h1>
         <table>
