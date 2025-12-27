@@ -1,12 +1,9 @@
-import os
-from flasgger import Swagger
 import logging
-import time
 import requests
-import numpy as np
+from flasgger import Swagger
 from flask import Flask, Response, request, render_template, send_from_directory
-from waitress import serve
 from sense_hat import SenseHat
+from waitress import serve
 from number_matrix import NumberMatrix
 
 logging.basicConfig(
@@ -20,6 +17,16 @@ swagger = Swagger(app)
 sense = SenseHat()
 rotation = 0
 sense.set_rotation(rotation)
+last_readings = None
+units = {
+    "North": "Degrees",
+    "X": "-",
+    "Y": "-",
+    "Z": "-",
+    "Temperature ": "°C",
+    "Humidity": "%",
+    "Pressure": "mbar"
+}
 
 
 @app.route("/")
@@ -66,16 +73,21 @@ def all_sensors():
               type: string
               example: "<html>...</html>"
     """
-    north = sense.get_compass()
     acceleration = sense.get_accelerometer_raw()
-    x = acceleration['x']
-    y = acceleration['y']
-    z = acceleration['z']
-    t = sense.get_temperature()
-    rh = sense.get_humidity()
-    p = sense.get_pressure()
+    readings = {
+        "North": sense.get_compass(),
+        "X": acceleration['x'],
+        "Y": acceleration['y'],
+        "Z": acceleration['z'],
+        "Temperature": sense.get_temperature(),
+        "Humidity": sense.get_humidity(),
+        "Pressure": sense.get_pressure()
+    }
+    global last_readings
+    if last_readings is None:
+        last_readings = readings
 
-    html = f"""
+    html = """
     <html>
       <head>
         <title>All Sensors</title>
@@ -95,18 +107,24 @@ def all_sensors():
       <body>
         <h1>All Sensors</h1>
         <table>
-          <tr><th>Output</th><th>Value</th></tr>
-          <tr><td>Compass (north)</td><td>{north:.0f}</td></tr>
-          <tr><td>Accel X</td><td>{x:.4f}</td></tr>
-          <tr><td>Accel Y</td><td>{y:.4f}</td></tr>
-          <tr><td>Accel Z</td><td>{z:.4f}</td></tr>
-          <tr><td>Temperature (°C)</td><td>{t:.0f}</td></tr>
-          <tr><td>Humidity (%)</td><td>{rh:.0f}</td></tr>
-          <tr><td>Pressure (mbar)</td><td>{p:.0f}</td></tr>
-        </table>
-      </body>
-    </html>
+          <tr><th>Output</th><th>Value</th><th>Last</th><th>Unit</th></tr>
     """
+    for reading in readings:
+        if reading in ("X", "Y", "Z"):
+            value = f"{readings[reading]:.3f}"
+            last_value = f"{last_readings[reading]:.3f}"
+        else:
+            value = f"{readings[reading]:.0f}"
+            last_value = f"{last_readings[reading]:.0f}"
+
+        html += f"<tr><td>{reading}</td><td>{value}</td><td>{last_value}</td><td>{units[reading]}</td></tr>"
+
+    last_readings = readings
+    html += """
+            </table>
+          </body>
+        </html>
+        """
     return html
 
 
@@ -222,7 +240,7 @@ def display_text():
         description: Processing error
     """
     text_to_display = request.form.get("text_to_display", "").strip()
-    repeats = int(request.form.get('repeats',"5"))
+    repeats = int(request.form.get('repeats', "5"))
     if not text_to_display:
         return "Text required", 400
 
