@@ -1,17 +1,16 @@
 [Unit]
-Description=Camera Streaming Service
+Description=Sensehat Streaming Service
 After=network.target graphical.target multi-user.target
 
 [Service]
 Environment=XDG_RUNTIME_DIR=/run/user/1000
 Environment=PULSE_SERVER=unix:/run/user/1000/pulse/native
-WorkingDirectory=/home/pi/CameraDemos/website
-ExecStart=/home/pi/CameraDemos/.venv/bin/python /home/pi/CameraDemos/website/website.py
+WorkingDirectory=/home/pi/SensehatDemos/website
+ExecStart=/home/pi/SensehatDemos/.venv/bin/python /home/pi/SensehatDemos/website/website.py
 User=pi
 Group=pi
 Restart=on-failure
 RestartSec=2
-Environment=LIBCAMERA_LOG_LEVELS=*:ERROR
 StandardOutput=journal
 StandardError=journal
 

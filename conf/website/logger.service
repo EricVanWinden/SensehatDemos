@@ -1,0 +1,16 @@
+[Unit]
+Description=Sense HAT Sensor Logger
+After=network.target multi-user.target
+
+[Service]
+WorkingDirectory=/home/pi/SensehatDemos
+ExecStart=/home/pi/SensehatDemos/.venv/bin/python /home/pi/SensehatDemos/logger.py
+User=pi
+Group=pi
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
