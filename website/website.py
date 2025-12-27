@@ -96,6 +96,9 @@ def all_sensors():
         border-collapse: collapse;
         width: auto;
       }
+      table tr:first-child th {
+        border-top: 2px solid #555;
+      }
       th {
         background-color: #eee;
         border-bottom: 2px solid #555;
@@ -112,6 +115,9 @@ def all_sensors():
       }
       td:not(:first-child) {
         text-align: center;
+      }
+      table tr:last-child td {
+        border-bottom: 2px solid #555;
       }
     </style>
   </head>
