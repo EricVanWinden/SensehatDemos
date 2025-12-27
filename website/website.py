@@ -27,6 +27,8 @@ units = {
     "Humidity": "%",
     "Pressure": "mbar"
 }
+LOG_DIR = "/home/pi/SensehatDemos/website"
+LOGFILE = "sensor_log.txt"
 
 
 @app.route("/")
@@ -53,6 +55,32 @@ def home():
               example: "<html>...</html>"
     """
     return render_template("home.html")
+
+
+@app.route("/download_log")
+def download_log():
+    """
+    Download the sensor log file.
+
+    ---
+    tags:
+      - SenseHat
+    get:
+      description: Download the tab‑delimited Sense HAT sensor log.
+      responses:
+        200:
+          description: The sensor_log.txt file will be downloaded.
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+    """
+    return send_from_directory(
+        LOG_DIR,
+        LOGFILE,
+        as_attachment=True
+    )
 
 
 @app.route('/all_sensors')
