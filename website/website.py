@@ -124,12 +124,17 @@ def sensor_data():
     for line in list(lines)[1:]:
         parts = line.strip().split("\t")
         ts = datetime.datetime.fromisoformat(parts[0])
+        temperature = float(parts[5])
+        humidity = float(parts[6])
+        pressure = float(parts[7])
+        if pressure < 1:
+            continue
         data.append({
             "timestamp": parts[0],
             "time_hm": ts.strftime("%H:%M"),
-            "temperature": float(parts[5]),
-            "humidity": float(parts[6]),
-            "pressure": float(parts[7])
+            "temperature": temperature,
+            "humidity": humidity,
+            "pressure": pressure
         })
 
     return data
