@@ -1,5 +1,6 @@
 import logging
 import requests
+import datetime
 from collections import deque
 from flasgger import Swagger
 from flask import Flask, Response, request, render_template, send_from_directory
@@ -109,29 +110,23 @@ def sensor_data():
         200:
           description: JSON array of sensor readings.
     """
-    max_lines = 60 * 24  # last 24 hours
-
+    max_lines = 60 * 24
     with open(f"{LOG_DIR}/{LOGFILE}") as f:
         lines = deque(f, max_lines + 1)
 
     data = []
     for line in list(lines)[1:]:
         parts = line.strip().split("\t")
+        ts = datetime.datetime.fromisoformat(parts[0])
         data.append({
             "timestamp": parts[0],
-            "north": float(parts[1]),
-            "x": float(parts[2]),
-            "y": float(parts[3]),
-            "z": float(parts[4]),
+            "time_hm": ts.strftime("%H:%M"),
             "temperature": float(parts[5]),
             "humidity": float(parts[6]),
             "pressure": float(parts[7])
         })
 
     return data
-
-
-from collections import deque
 
 
 @app.route('/all_sensors')

@@ -1,60 +1,65 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sensor Graph</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <h1>Sensor Graph</h1>
-    <canvas id="chart" width="800" height="400"></canvas>
+<script>
+    fetch("/sensor-data")
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(row => row.time_hm);
 
-    <script>
-        fetch("/sensor_data")
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map(row => row.timestamp);
+            const temps = data.map(row => row.temperature);
+            const hums = data.map(row => row.humidity);
+            const press = data.map(row => row.pressure);
 
-                const temps = data.map(row => row.temperature);
-                const hums = data.map(row => row.humidity);
-                const press = data.map(row => row.pressure);
-
-                new Chart(document.getElementById("chart"), {
-                    type: "line",
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: "Temperature (C)",
-                                data: temps,
-                                borderColor: "red",
-                                fill: false
-                            },
-                            {
-                                label: "Humidity (%)",
-                                data: hums,
-                                borderColor: "blue",
-                                fill: false
-                            },
-                            {
-                                label: "Pressure (mbar)",
-                                data: press,
-                                borderColor: "green",
-                                fill: false
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        interaction: { mode: "index", intersect: false },
-                        stacked: false,
-                        scales: {
-                            y: {
-                                title: { display: true, text: "Value" }
-                            }
+            new Chart(document.getElementById("chart"), {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Temperature (°C)",
+                            data: temps,
+                            borderColor: "red",
+                            yAxisID: "tempAxis",
+                            fill: false
+                        },
+                        {
+                            label: "Humidity (%)",
+                            data: hums,
+                            borderColor: "blue",
+                            yAxisID: "humAxis",
+                            fill: false
+                        },
+                        {
+                            label: "Pressure (mbar)",
+                            data: press,
+                            borderColor: "green",
+                            yAxisID: "pressAxis",
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: { mode: "index", intersect: false },
+                    stacked: false,
+                    scales: {
+                        tempAxis: {
+                            type: "linear",
+                            position: "left",
+                            title: { display: true, text: "Temperature (°C)" }
+                        },
+                        humAxis: {
+                            type: "linear",
+                            position: "right",
+                            title: { display: true, text: "Humidity (%)" },
+                            grid: { drawOnChartArea: false }
+                        },
+                        pressAxis: {
+                            type: "linear",
+                            position: "right",
+                            title: { display: true, text: "Pressure (hPa)" },
+                            grid: { drawOnChartArea: false }
                         }
                     }
-                });
+                }
             });
-    </script>
-</body>
-</html>
+        });
+</script>
