@@ -75,8 +75,10 @@ def graph(mode):
         endpoint = "/data_minute"
     elif mode == "hour":
         endpoint = "/data_hour"
+    elif mode == "day":
+        endpoint = "/data_day"
     else:
-        endpoint = "/data_minute"  # fallback
+        endpoint = "/data_minute"
     try:
         return render_template("graph.html", endpoint=endpoint)
     except Exception as e:
@@ -87,15 +89,10 @@ def graph(mode):
 @app.route("/data_minute")
 def data_minute():
     """
-    Return logged sensor data as JSON.
+    Return logged sensor per minute data as JSON.
     ---
     tags:
       - Logger
-    get:
-      description: Returns parsed sensor_log.txt as JSON for graphing.
-      responses:
-        200:
-          description: JSON array of sensor readings.
     """
     max_lines = 60 * 24
     with open(f"{LOG_DIR}/{LOGFILE}") as f:
@@ -122,27 +119,41 @@ def data_minute():
             logging.exception(f"Error parsing {line}: {e}")
     return data
 
+
 @app.route("/data_hour")
 def data_hour():
     """
-    Return logged sensor data as JSON.
+    Return logged sensor data per hour as JSON.
     ---
     tags:
       - Logger
-    get:
-      description: Returns parsed sensor_log.txt as JSON for graphing.
-      responses:
-        200:
-          description: JSON array of sensor readings.
     """
+    label_length = 13
+    return group_data(label_length)
+
+
+@app.route("/data_day")
+def data_day():
+    """
+    Return logged sensor data per day as JSON.
+    ---
+    tags:
+      - Logger
+    """
+    label_length = 10
+    return group_data(label_length)
+
+
+def group_data(label_length):
     df = pd.read_csv(f"{LOG_DIR}/{LOGFILE}", sep="\t")
     df = df.dropna()
-    df["label"] = df["Timestamp"].str.slice(0, 13)
-    df = df.rename(columns={ "Temperature": "temperature", "Humidity": "humidity", "Pressure": "pressure" })
+    df["label"] = df["Timestamp"].str.slice(0, label_length)
+    df = df.rename(columns={"Temperature": "temperature", "Humidity": "humidity", "Pressure": "pressure"})
     grouped = df.groupby("label")
     hourly = grouped[["temperature", "humidity", "pressure"]].mean()
     data = hourly.reset_index().to_dict(orient="records")
     return data
+
 
 @app.route("/download_log")
 def download_log():
