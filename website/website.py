@@ -138,8 +138,9 @@ def data_hour():
     df = pd.read_csv(f"{LOG_DIR}/{LOGFILE}", sep="\t")
     df = df.dropna()
     df["label"] = df["Timestamp"].str.slice(0, 13)
+    df = df.rename(columns={ "Temperature": "temperature", "Humidity": "humidity", "Pressure": "pressure" })
     grouped = df.groupby("label")
-    hourly = grouped[["Temperature", "Humidity", "Pressure"]].mean()
+    hourly = grouped[["temperature", "humidity", "pressure"]].mean()
     data = hourly.reset_index().to_dict(orient="records")
     return data
 
