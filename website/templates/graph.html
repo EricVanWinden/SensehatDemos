@@ -11,11 +11,11 @@
     <canvas id="chart" width="800" height="400"></canvas>
 
     <script>
-        fetch("/sensor_data")
+        const endpoint = "{{ endpoint }}";
+        fetch(endpoint)
             .then(response => response.json())
             .then(data => {
-                const labels = data.map(row => row.time_hm);
-
+                const labels = data.map(row => row.label);
                 const temps = data.map(row => row.temperature);
                 const hums = data.map(row => row.humidity);
                 const press = data.map(row => row.pressure);

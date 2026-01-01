@@ -1,6 +1,7 @@
 import logging
 import requests
 import datetime
+import pandas as pd
 from collections import deque
 from flasgger import Swagger
 from flask import Flask, Response, request, render_template, send_from_directory
@@ -59,8 +60,8 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/graph")
-def graph():
+@app.route("/graph/<mode>")
+def graph(mode):
     """
     Sensehat graph page.
     ---
@@ -70,41 +71,21 @@ def graph():
       200:
         description: HTML graph
     """
+    if mode == "minute":
+        endpoint = "/data_minute"
+    elif mode == "hour":
+        endpoint = "/data_hour"
+    else:
+        endpoint = "/data_minute"  # fallback
     try:
-        return render_template("graph.html")
+        return render_template("graph.html", endpoint=endpoint)
     except Exception as e:
         logging.exception(f"Error rendering graph: {e}")
-        raise
+        return "Rendering failed"
 
 
-@app.route("/download_log")
-def download_log():
-    """
-    Download the sensor log file.
-
-    ---
-    tags:
-      - Logger
-    get:
-      description: Download the tab‑delimited Sense HAT sensor log.
-      responses:
-        200:
-          description: The sensor_log.txt file will be downloaded.
-          content:
-            text/plain:
-              schema:
-                type: string
-                format: binary
-    """
-    return send_from_directory(
-        LOG_DIR,
-        LOGFILE,
-        as_attachment=True
-    )
-
-
-@app.route("/sensor_data")
-def sensor_data():
+@app.route("/data_minute")
+def data_minute():
     """
     Return logged sensor data as JSON.
     ---
@@ -132,7 +113,7 @@ def sensor_data():
                 continue
             data.append({
                 "timestamp": parts[0],
-                "time_hm": ts.strftime("%H:%M"),
+                "label": ts.strftime("%H:%M"),
                 "temperature": temperature,
                 "humidity": humidity,
                 "pressure": pressure
@@ -140,6 +121,52 @@ def sensor_data():
         except Exception as e:
             logging.exception(f"Error parsing {line}: {e}")
     return data
+
+@app.route("/data_hour")
+def data_hour():
+    """
+    Return logged sensor data as JSON.
+    ---
+    tags:
+      - Logger
+    get:
+      description: Returns parsed sensor_log.txt as JSON for graphing.
+      responses:
+        200:
+          description: JSON array of sensor readings.
+    """
+    df = pd.read_csv(f"{LOG_DIR}/{LOGFILE}", sep="\t")
+    df = df.dropna()
+    df["label"] = df["Timestamp"].str.slice(0, 13)
+    grouped = df.groupby("label")
+    hourly = grouped[["Temperature", "Humidity", "Pressure"]].mean()
+    data = hourly.reset_index().to_dict(orient="records")
+    return data
+
+@app.route("/download_log")
+def download_log():
+    """
+    Download the sensor log file.
+
+    ---
+    tags:
+      - Logger
+    get:
+      description: Download the tab‑delimited Sense HAT sensor log.
+      responses:
+        200:
+          description: The sensor_log.txt file will be downloaded.
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+    """
+    return send_from_directory(
+        LOG_DIR,
+        LOGFILE,
+        as_attachment=True
+    )
 
 
 @app.route('/all_sensors')
