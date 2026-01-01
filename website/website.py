@@ -1,10 +1,12 @@
+import os
+import subprocess
 import logging
 import requests
 import datetime
 import pandas as pd
 from collections import deque
 from flasgger import Swagger
-from flask import Flask, Response, request, render_template, send_from_directory
+from flask import Flask, Response, request, render_template, send_from_directory, jsonify
 from sense_hat import SenseHat
 from waitress import serve
 from number_matrix import NumberMatrix
@@ -399,18 +401,33 @@ def health():
     ---
     tags:
       - System
-    summary: Check if the service is running
-    description: Returns **OK** when the service is alive and responsive.
-    responses:
-      200:
-        description: Service is healthy
-        content:
-          text/plain:
-            schema:
-              type: string
-              example: OK
     """
     return "OK"
+
+
+def get_usage(pid):
+    result = subprocess.run(
+        ["ps", "-p", str(pid), "-o", "%cpu,%mem"],
+        capture_output=True, text=True
+    )
+    lines = result.stdout.strip().split("\n")
+    if len(lines) < 2:
+        return None, None
+    cpu, mem = lines[1].split()
+    return cpu, mem
+
+
+@app.route("/stats")
+def stats():
+    """
+    CPU and memory statistics.
+    ---
+    tags:
+      - System
+    """
+    pid = os.getpid()
+    cpu, mem = get_usage(pid)
+    return jsonify({"cpu": cpu, "mem": mem})
 
 
 if __name__ == "__main__":
