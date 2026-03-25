@@ -129,9 +129,9 @@ def log_readings():
                     elif line.startswith("1-0:2.8.2"):
                         values[7] = line[10:19]
                     elif line.startswith("1-0:1.7.0"):
-                        values[8] = int(float(line[10:16]) * 1000)
+                        values[8] = between_parentheses(line)
                     elif line.startswith("1-0:2.7.0"):
-                        values[9] = int(float(line[10:16]) * 1000)
+                        values[9] = between_parentheses(line)
                     elif line.startswith("0-0:96.14.0"):
                         values[10] = between_parentheses(line)
                     elif line.startswith("0-0:96.7.21"):
@@ -159,7 +159,7 @@ def log_readings():
                     elif line.startswith("0-1:96.1.0"):
                         values[22] = between_parentheses(line)
                     elif line.startswith("0-1:24.2.1"):
-                        values[23] = int(float(line[26:35]) * 1000)
+                        values[23] = between_parentheses(line)
                     elif line.startswith("!"):
                         values[24] = line
                     else:
