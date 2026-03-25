@@ -34,6 +34,7 @@ units = {
 }
 LOG_DIR = "/home/pi/SensehatDemos/website"
 LOGFILE = "sensor_log.txt"
+LOGFILE_P1 = "p1_log.txt"
 
 
 @app.route("/")
@@ -182,6 +183,30 @@ def download_log():
         as_attachment=True
     )
 
+@app.route("/download_p1_log")
+def download_p1_log():
+    """
+    Download the p1 log file.
+
+    ---
+    tags:
+      - Logger
+    get:
+      description: Download the tab‑delimited Sense HAT sensor log.
+      responses:
+        200:
+          description: The p1_log.txt file will be downloaded.
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+    """
+    return send_from_directory(
+        LOG_DIR,
+        LOGFILE_P1,
+        as_attachment=True
+    )
 
 @app.route('/all_sensors')
 def all_sensors():
