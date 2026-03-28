@@ -158,6 +158,85 @@ def group_data(label_length):
     return data
 
 
+@app.route("/graph_p1/<mode>")
+def graph_p1(mode):
+    """
+    Sensehat graph page.
+    ---
+    tags:
+      - Logger
+    responses:
+      200:
+        description: HTML graph
+    """
+    if mode == "minute":
+        endpoint = "/data_minute_p1"
+    elif mode == "hour":
+        endpoint = "/data_hour_p1"
+    elif mode == "day":
+        endpoint = "/data_day_p1"
+    else:
+        endpoint = "/data_minute_p1"
+    try:
+        return render_template("graph_p1.html", endpoint=endpoint)
+    except Exception as e:
+        logging.exception(f"Error rendering graph: {e}")
+        return "Rendering failed"
+
+
+@app.route("/data_minute_p1")
+def data_minute_p1():
+    """
+    Return logged sensor per minute data as JSON.
+    ---
+    tags:
+      - Logger
+    """
+    max_lines = 60 * 24
+    label_length = 10
+    data = group_data_p1(label_length)
+    return data[-max_lines:]
+
+
+@app.route("/data_hour_p1")
+def data_hour_p1():
+    """
+    Return logged sensor data per hour as JSON.
+    ---
+    tags:
+      - Logger
+    """
+    label_length = 8
+    return group_data_p1(label_length)
+
+
+@app.route("/data_day_p1")
+def data_day_p1():
+    """
+    Return logged sensor data per day as JSON.
+    ---
+    tags:
+      - Logger
+    """
+    label_length = 6
+    return group_data_p1(label_length)
+
+
+def group_data_p1(label_length):
+    df = pd.read_csv(f"{LOG_DIR}/{LOGFILE_P1}", sep="\t", on_bad_lines='skip')
+    df["label"] = df["time"].str.slice(0, label_length)
+    df["electricity"] = df["off_peak_day"] + df["peak_day"]
+    df["electricity_return"] = df["off_peak_return"] + df["peak_return"]
+    df["electricity"] = pd.to_numeric(df["electricity"], errors='coerce')
+    df["electricity_return"] = pd.to_numeric(df["electricity_return"], errors='coerce')
+    df["gas"] = pd.to_numeric(df["gas"], errors='coerce')
+    df = df.dropna(subset=["electricity", "electricity_return", "gas"])
+    grouped = df.groupby("label")
+    hourly = grouped[["electricity", "electricity_return", "gas"]].mean()
+    data = hourly.reset_index().to_dict(orient="records")
+    return data
+
+
 @app.route("/download_log")
 def download_log():
     """
@@ -183,6 +262,7 @@ def download_log():
         as_attachment=True
     )
 
+
 @app.route("/download_p1_log")
 def download_p1_log():
     """
@@ -207,6 +287,7 @@ def download_p1_log():
         LOGFILE_P1,
         as_attachment=True
     )
+
 
 @app.route('/all_sensors')
 def all_sensors():

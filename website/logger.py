@@ -12,31 +12,32 @@ LOGFILE = "/home/pi/SensehatDemos/website/sensor_log.txt"
 LOGFILE_P1 = "/home/pi/SensehatDemos/website/p1_log.txt"
 delay = 60
 p1_headers = [
-    "Meter type",
-    "DSMR version",
-    "Time",
-    "Electricity meter ID",
-    "off-peak day",
-    "peak day",
-    "off-peak return",
-    "peak return",
-    "Consumed power",
-    "Returned power",
-    "Tarief indicator",
-    "Power failures",
-    "Long failures",
-    "Power failure log",
-    "Voltage sags L1",
-    "Voltage swells L1",
-    "Message code",
-    "Voltage L1",
-    "Current L1",
-    "Power L1 consumed",
-    "Power L1 returned",
-    "Gas meter type",
-    "Gas meter ID",
-    "Gas",
-    "Checksum",
+    "meter_type",
+    "dsrm_version",
+    "time",
+    "electricity_meter_id",
+    "off_peak_day",
+    "peak_day",
+    "off_peak_return",
+    "peak_return",
+    "consumed_power",
+    "returned_power",
+    "tariff_indicator",
+    "power_failures",
+    "long_failures",
+    "power_failure_log",
+    "voltage_sags_L1",
+    "voltage_swells_L1",
+    "message_code",
+    "voltage_L1",
+    "current_L1",
+    "power_l1_consumed",
+    "power_l1_returned",
+    "gas_meter_type",
+    "gas_meter_id",
+    "gas_time",
+    "gas",
+    "checksum",
 ]
 
 logging.basicConfig(
@@ -159,9 +160,15 @@ def log_readings():
                     elif line.startswith("0-1:96.1.0"):
                         values[22] = between_parentheses(line)
                     elif line.startswith("0-1:24.2.1"):
-                        values[23] = between_parentheses(line)
+                        cleaned = between_parentheses(line)
+                        split = cleaned.split("W)(", 1)
+                        values[23] = split[0]
+                        if len(split) > 1:
+                            values[24] = split[1]
+                        else:
+                            values[24] = ""
                     elif line.startswith("!"):
-                        values[24] = line
+                        values[25] = line
                     else:
                         logging.debug(f'Unrecognized line: {line}')
 

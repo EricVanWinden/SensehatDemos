@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sensor Graph</title>
+
+    <!-- Load Chart.js BEFORE your script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <canvas id="chart" width="800" height="400"></canvas>
+
+    <script>
+        const endpoint = "{{ endpoint }}";
+        fetch(endpoint)
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(row => row.label);
+                const temps = data.map(row => row.electricity);
+                const hums = data.map(row => row.electricity_return);
+                const press = data.map(row => row.gas);
+
+                new Chart(document.getElementById("chart"), {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: "electricity",
+                                data: temps,
+                                borderColor: "red",
+                                yAxisID: "electricityAxis",
+                                fill: false
+                            },
+                            {
+                                label: "electricity_return",
+                                data: hums,
+                                borderColor: "blue",
+                                yAxisID: "electricityreturnAxis",
+                                fill: false
+                            },
+                            {
+                                label: "gas",
+                                data: press,
+                                borderColor: "green",
+                                yAxisID: "gasAxis",
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        interaction: { mode: "index", intersect: false },
+                        stacked: false,
+                        scales: {
+                            electricityAxis: {
+                                type: "linear",
+                                position: "left",
+                                title: { display: true, text: "electricity" }
+                            },
+                            electricityreturnAxis: {
+                                type: "linear",
+                                position: "right",
+                                title: { display: true, text: "electricity_return" },
+                                grid: { drawOnChartArea: false }
+                            },
+                            gasAxis: {
+                                type: "linear",
+                                position: "right",
+                                title: { display: true, text: "gas" },
+                                grid: { drawOnChartArea: false }
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+
+</body>
+</html>
