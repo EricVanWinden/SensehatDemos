@@ -161,7 +161,8 @@ def log_readings():
                         values[22] = between_parentheses(line)
                     elif line.startswith("0-1:24.2.1"):
                         cleaned = between_parentheses(line)
-                        split = cleaned.split("W)(", 1)
+                        cleaned = cleaned.replace("W)(", "|").replace("S)(", "|")
+                        split = cleaned.split("|", 1)
                         values[23] = split[0]
                         if len(split) > 1:
                             values[24] = split[1]
