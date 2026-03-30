@@ -148,7 +148,7 @@ def data_day():
 
 
 def group_data(label_length):
-    df = pd.read_csv(f"{LOG_DIR}/{LOGFILE}", sep="\t")
+    df = pd.read_csv(f"{LOG_DIR}/{LOGFILE}", sep="\t", on_bad_lines='skip')
     df = df.dropna()
     df["label"] = df["Timestamp"].str.slice(0, label_length)
     df = df.rename(columns={"Temperature": "temperature", "Humidity": "humidity", "Pressure": "pressure"})

@@ -10,7 +10,7 @@ from sense_hat import SenseHat
 sense = SenseHat()
 LOGFILE = "/home/pi/SensehatDemos/website/sensor_log.txt"
 LOGFILE_P1 = "/home/pi/SensehatDemos/website/p1_log.txt"
-delay = 60
+delay = 20
 p1_headers = [
     "meter_type",
     "dsrm_version",
@@ -161,8 +161,7 @@ def log_readings():
                         values[22] = between_parentheses(line)
                     elif line.startswith("0-1:24.2.1"):
                         cleaned = between_parentheses(line)
-                        cleaned = cleaned.replace("W)(", "|").replace("S)(", "|")
-                        split = cleaned.split("|", 1)
+                        split = cleaned.split(")(", 1)
                         values[23] = split[0]
                         if len(split) > 1:
                             values[24] = split[1]
