@@ -238,7 +238,7 @@ def group_data_p1(label_length):
 
 
 @app.route("/graph_increase_p1/<mode>")
-def graph_p1(mode):
+def graph_increase_p1(mode):
     """
     Sensehat graph page.
     ---
