@@ -295,7 +295,7 @@ def group_data_increase_p1(label_length):
     df["gas"] = pd.to_numeric(df["gas"], errors='coerce')
     df = df.dropna(subset=["electricity", "electricity_return", "gas"])
     grouped = df.groupby("label")
-    hourly = grouped[["electricity", "electricity_return", "gas"]].mean()
+    hourly = grouped[["electricity", "electricity_return", "gas"]].min()
     hourly["electricity"] = hourly["electricity"].diff()
     hourly["electricity_return"] = hourly["electricity_return"].diff()
     hourly["gas"] = hourly["gas"].diff()
