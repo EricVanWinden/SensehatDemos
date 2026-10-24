@@ -300,6 +300,7 @@ def group_data_increase_p1(label_length):
     hourly["electricity_return"] = hourly["electricity_return"].diff()
     hourly["gas"] = hourly["gas"].diff()
     hourly = hourly.dropna(subset=["electricity", "electricity_return", "gas"])
+    hourly = hourly.drop(index="261024", errors="ignore")
     data = hourly.reset_index().to_dict(orient="records")
     return data
 
