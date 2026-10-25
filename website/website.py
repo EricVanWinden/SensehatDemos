@@ -80,6 +80,8 @@ def graph(mode):
         endpoint = "/data_hour"
     elif mode == "day":
         endpoint = "/data_day"
+    elif mode == "month":
+        endpoint = "/data_month"
     else:
         endpoint = "/data_minute"
     try:
@@ -147,6 +149,18 @@ def data_day():
     return group_data(label_length)
 
 
+@app.route("/data_month")
+def data_month():
+    """
+    Return logged sensor data per day as JSON.
+    ---
+    tags:
+      - Logger
+    """
+    label_length = 7
+    return group_data(label_length)
+
+
 def group_data(label_length):
     df = pd.read_csv(f"{LOG_DIR}/{LOGFILE}", sep="\t", on_bad_lines='skip')
     df = df.dropna()
@@ -175,6 +189,8 @@ def graph_p1(mode):
         endpoint = "/data_hour_p1"
     elif mode == "day":
         endpoint = "/data_day_p1"
+    elif mode == "month":
+        endpoint = "/data_month_p1"
     else:
         endpoint = "/data_minute_p1"
     try:
@@ -222,6 +238,18 @@ def data_day_p1():
     return group_data_p1(label_length)
 
 
+@app.route("/data_month_p1")
+def data_month_p1():
+    """
+    Return logged sensor data per month as JSON.
+    ---
+    tags:
+      - Logger
+    """
+    label_length = 4
+    return group_data_p1(label_length)
+
+
 def group_data_p1(label_length):
     df = pd.read_csv(f"{LOG_DIR}/{LOGFILE_P1}", sep="\t", on_bad_lines='skip')
     df["label"] = df["time"].str.slice(0, label_length)
@@ -252,6 +280,8 @@ def graph_increase_p1(mode):
         endpoint = "/data_hour_increase_p1"
     elif mode == "day":
         endpoint = "/data_day_increase_p1"
+    elif mode == "month":
+        endpoint = "/data_month_increase_p1"
     else:
         endpoint = "/data_day_increase_p1"
     try:
@@ -282,6 +312,18 @@ def data_day_increase_p1():
       - Logger
     """
     label_length = 6
+    return group_data_increase_p1(label_length)
+
+
+@app.route("/data_month_increase_p1")
+def data_month_increase_p1():
+    """
+    Return logged sensor data per month as JSON.
+    ---
+    tags:
+      - Logger
+    """
+    label_length = 4
     return group_data_increase_p1(label_length)
 
 
